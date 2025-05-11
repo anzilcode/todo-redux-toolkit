@@ -1,31 +1,42 @@
-//name initialSyate reducers
+// store/slice/todoSlice.js
 
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    todoList : []
-}
-
+    todoList: []
+};
 
 const todoReducer = createSlice({
-    name:'todos',
-    initialState:initialState,
-    reducers:{
-
-        addTodo(state,action){
-            console.log(action);
+    name: 'todos',
+    initialState: initialState,
+    reducers: {
+        addTodo(state, action) {
             const newlyCreatedTodo = {
-                id:state.todoList.length === 0 ? 1 : state.todoList.length+1,
-                title:action.payload
+                id: state.todoList.length === 0 ? 1 : state.todoList.length + 1,
+                title: action.payload
+            };
+            state.todoList.push(newlyCreatedTodo);
+            return state;
+        },
+
+        deleteTodo(state, action) {
+            state.todoList = state.todoList.filter(todoItem => todoItem.id !== action.payload);
+            return state;
+        },
+
+        updateTodo(state, action) {
+            const { id, title } = action.payload;
+            const index = state.todoList.findIndex(item => item.id === id);
+            if (index !== -1) {
+                state.todoList[index] = {
+                    ...state.todoList[index],
+                    title: title
+                };
             }
-
-            state.todoList.push(newlyCreatedTodo)
-
-            return state
+            return state;
         }
-
     }
-})
+});
 
-export const {addTodo} = todoReducer.actions
-export default todoReducer.reducer
+export const { addTodo, deleteTodo, updateTodo } = todoReducer.actions;
+export default todoReducer.reducer;
