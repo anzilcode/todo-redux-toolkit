@@ -1,9 +1,18 @@
 // store/slice/todoSlice.js
 
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+
+export const fetchTodos = createAsyncThunk('fetchTodos', async () => {
+    const apiResponse = await fetch('https://dummyjson.com/todos');
+    const result = await apiResponse.json();
+    return result;
+});
 
 const initialState = {
-    todoList: []
+    todoList: [],
+    loading: false,
+    todoApi: [],
+    isError: false
 };
 
 const todoReducer = createSlice({
@@ -16,12 +25,10 @@ const todoReducer = createSlice({
                 title: action.payload
             };
             state.todoList.push(newlyCreatedTodo);
-            return state;
         },
 
         deleteTodo(state, action) {
             state.todoList = state.todoList.filter(todoItem => todoItem.id !== action.payload);
-            return state;
         },
 
         updateTodo(state, action) {
@@ -33,8 +40,20 @@ const todoReducer = createSlice({
                     title: title
                 };
             }
-            return state;
         }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(fetchTodos.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(fetchTodos.fulfilled, (state, action) => {
+            state.loading = false;
+            state.todoApi = action.payload.todos;
+        });
+        builder.addCase(fetchTodos.rejected, (state) => {
+            state.loading = false;
+            state.isError = true;
+        });
     }
 });
 
