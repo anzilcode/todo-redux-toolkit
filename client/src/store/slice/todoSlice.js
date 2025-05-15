@@ -1,5 +1,3 @@
-// store/slice/todoSlice.js
-
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export const fetchTodos = createAsyncThunk('fetchTodos', async () => {
