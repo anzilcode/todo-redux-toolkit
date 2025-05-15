@@ -80,7 +80,7 @@ const TodoList = () => {
             <ul>
                 {todoApi && todoApi.length > 0 ? (
                     todoApi.map(apiTodo => (
-                        <li key={apiTodo.id}>{apiTodo.todo}</li> // Use .todo, not .title
+                        <li key={apiTodo.id}>{apiTodo.todo}</li>
                     ))
                 ) : (
                     <li>No API todos fetched</li>
